@@ -32,12 +32,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String jankenText = '👊️';
 
-  void _chooseJankenText() {
-    setState(() {
-      jankenText = '✋';
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,16 +43,16 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '相手️',
+              '相手',
               style: TextStyle(fontSize: 30),
             ),
             Text(
               '✌️',
               style: TextStyle(fontSize: 100),
             ),
-            SizedBox(height: 80,),
+            const SizedBox(height: 80,),
             Text(
-              '自分️',
+              '自分',
               style: TextStyle(fontSize: 30),
             ),
             Text(
@@ -68,10 +62,39 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _chooseJankenText,
-        tooltip: 'Increment',
-        child: const Icon(Icons.front_hand),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                jankenText = '👊️';
+              });
+            },
+            tooltip: 'Increment',
+            child: const Text('👊️', style: TextStyle(fontSize: 30),),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                jankenText = '✌️';
+              });
+            },
+            tooltip: 'Increment',
+            child: const Text('✌️', style: TextStyle(fontSize: 30),),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                jankenText = '✋';
+              });
+            },
+            tooltip: 'Increment',
+            child: const Text('✋', style: TextStyle(fontSize: 30),),
+          ),
+        ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
