@@ -1,37 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'next_page.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class NextPage extends StatefulWidget {
+  const NextPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<NextPage> createState() => _NextPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _NextPageState extends State<NextPage> {
   Hand? myHand;
   Hand? computerHand;
   Result? result;
@@ -74,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('あっち向いてほいゲーム'),
       ),
       body: Center(
         child: Column(
@@ -95,14 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
               result?.text ?? '?',
               style: TextStyle(fontSize: 30),
             ),
-            if (result == Result.win) ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NextPage()),
-                  );
-                },
-                child: const Text('あっち向いてほいゲームへ')),
             const SizedBox(
               height: 80,
             ),
@@ -117,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            heroTag: 'rock',
+            heroTag: 'left',
             onPressed: () {
               setState(() {
                 myHand = Hand.rock;
@@ -132,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            heroTag: 'scissors',
+            heroTag: 'up',
             onPressed: () {
               setState(() {
                 myHand = Hand.scissors;
@@ -147,7 +116,22 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            heroTag: 'paper',
+            heroTag: 'right',
+            onPressed: () {
+              setState(() {
+                myHand = Hand.scissors;
+              });
+              chooseComputerText();
+            },
+            tooltip: 'Increment',
+            child: const Text(
+              '✌️',
+              style: TextStyle(fontSize: 30),
+            ),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'down',
             onPressed: () {
               setState(() {
                 myHand = Hand.paper;
@@ -196,17 +180,6 @@ enum Result {
         return '負け';
       case Result.draw:
         return 'あいこ';
-    }
-  }
-
-  String koreanText() {
-    switch (this) {
-      case Result.win:
-        return '승리';
-      case Result.lose:
-        return '패배';
-      case Result.draw:
-        return '무승부';
     }
   }
 }
