@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               '相手',
               style: TextStyle(fontSize: 30),
             ),
