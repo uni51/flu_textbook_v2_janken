@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'dart:async';
+
+import 'package:janken/main.dart';
 
 class NextPage extends StatefulWidget {
   const NextPage({super.key});
@@ -9,6 +12,7 @@ class NextPage extends StatefulWidget {
 }
 
 class _NextPageState extends State<NextPage> {
+  Timer? timer;
   Hand? myHand;
   Hand? computerHand;
   Result? result;
@@ -30,16 +34,26 @@ class _NextPageState extends State<NextPage> {
 
     final Result result;
 
-    if (myHand == computerHand) {
+    if (myHand != computerHand) {
       result = Result.draw;
-    } else if (myHand == Hand.rock && computerHand == Hand.scissors) {
-      result = Result.win;
-    } else if (myHand == Hand.scissors && computerHand == Hand.paper) {
-      result = Result.win;
-    } else if (myHand == Hand.paper && computerHand == Hand.rock) {
-      result = Result.win;
     } else {
-      result = Result.lose;
+      result = Result.win;
+    }
+
+    if (result == Result.draw) {
+      timer = Timer(
+        const Duration(seconds: 1), //遅延時間＝2秒
+            () {
+          // コールバックを渡しておく。ここに遷移メソッドは書いておく
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+              const MyHomePage(title: 'Flutter Demo Home Page'),
+            ),
+          );
+        },
+      );
     }
 
     setState(() {
@@ -89,13 +103,13 @@ class _NextPageState extends State<NextPage> {
             heroTag: 'left',
             onPressed: () {
               setState(() {
-                myHand = Hand.rock;
+                myHand = Hand.left;
               });
               chooseComputerText();
             },
-            tooltip: 'Increment',
+            tooltip: 'left',
             child: const Text(
-              '👊️',
+              '👈',
               style: TextStyle(fontSize: 30),
             ),
           ),
@@ -104,13 +118,13 @@ class _NextPageState extends State<NextPage> {
             heroTag: 'up',
             onPressed: () {
               setState(() {
-                myHand = Hand.scissors;
+                myHand = Hand.up;
               });
               chooseComputerText();
             },
-            tooltip: 'Increment',
+            tooltip: 'up',
             child: const Text(
-              '✌️',
+              '👆️',
               style: TextStyle(fontSize: 30),
             ),
           ),
@@ -119,13 +133,13 @@ class _NextPageState extends State<NextPage> {
             heroTag: 'right',
             onPressed: () {
               setState(() {
-                myHand = Hand.scissors;
+                myHand = Hand.right;
               });
               chooseComputerText();
             },
-            tooltip: 'Increment',
+            tooltip: 'right',
             child: const Text(
-              '✌️',
+              '👉',
               style: TextStyle(fontSize: 30),
             ),
           ),
@@ -134,13 +148,13 @@ class _NextPageState extends State<NextPage> {
             heroTag: 'down',
             onPressed: () {
               setState(() {
-                myHand = Hand.paper;
+                myHand = Hand.down;
               });
               chooseComputerText();
             },
-            tooltip: 'Increment',
+            tooltip: 'down',
             child: const Text(
-              '✋',
+              '👇',
               style: TextStyle(fontSize: 30),
             ),
           ),
@@ -151,18 +165,21 @@ class _NextPageState extends State<NextPage> {
 }
 
 enum Hand {
-  rock,
-  scissors,
-  paper;
+  left,
+  up,
+  right,
+  down;
 
   String get text {
     switch (this) {
-      case Hand.rock:
-        return '👊️';
-      case Hand.scissors:
-        return '✌️';
-      case Hand.paper:
-        return '✋';
+      case Hand.left:
+        return '👈';
+      case Hand.up:
+        return '👆';
+      case Hand.right:
+        return '👉';
+      case Hand.down:
+        return '👇';
     }
   }
 }
