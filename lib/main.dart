@@ -13,11 +13,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'じゃんけんゲーム',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'じゃんけんゲーム'),
     );
   }
 }
@@ -95,11 +95,11 @@ class _MyHomePageState extends State<MyHomePage> {
               result?.text ?? '?',
               style: TextStyle(fontSize: 30),
             ),
-            if (result == Result.win) ElevatedButton(
+            if (result == Result.win || result == Result.lose) ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => NextPage()),
+                    MaterialPageRoute(builder: (context) => NextPage(preResultText: result!.text)),
                   );
                 },
                 child: const Text('あっち向いてほいゲームへ')),

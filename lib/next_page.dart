@@ -5,7 +5,9 @@ import 'dart:async';
 import 'package:janken/main.dart';
 
 class NextPage extends StatefulWidget {
-  const NextPage({super.key});
+  final String preResultText;
+
+  const NextPage({super.key, required this.preResultText});
 
   @override
   State<NextPage> createState() => _NextPageState();
@@ -16,6 +18,16 @@ class _NextPageState extends State<NextPage> {
   Hand? myHand;
   Hand? computerHand;
   Result? result;
+
+  late String preResult;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 受け取ったデータを状態を管理する変数に格納
+    preResult = widget.preResultText;
+  }
 
   void chooseComputerText() {
     final random = Random();
@@ -32,12 +44,18 @@ class _NextPageState extends State<NextPage> {
       return;
     }
 
-    final Result result;
+    Result result;
 
-    if (myHand != computerHand) {
-      result = Result.draw;
-    } else {
-      result = Result.win;
+    result = Result.draw;
+    if (preResult == '勝ち') {
+      if (myHand == computerHand) {
+        result = Result.win;
+      }
+    }
+    if (preResult == '負け') {
+      if (myHand == computerHand) {
+        result = Result.lose;
+      }
     }
 
     if (result == Result.draw) {
@@ -49,7 +67,7 @@ class _NextPageState extends State<NextPage> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-              const MyHomePage(title: 'Flutter Demo Home Page'),
+              const MyHomePage(title: 'じゃんけんゲーム'),
             ),
           );
         },
@@ -80,14 +98,21 @@ class _NextPageState extends State<NextPage> {
               style: TextStyle(fontSize: 100),
             ),
             const SizedBox(
-              height: 80,
+              height: 50,
             ),
             Text(
               result?.text ?? '?',
-              style: TextStyle(fontSize: 30),
+              style: TextStyle(fontSize: 40),
             ),
             const SizedBox(
-              height: 80,
+              height: 30,
+            ),
+            Text(
+              result?.resultText() ?? '?',
+              style: TextStyle(fontSize: 20),
+            ),
+            const SizedBox(
+              height: 50,
             ),
             Text(
               myHand?.text ?? '?',
@@ -197,6 +222,17 @@ enum Result {
         return '負け';
       case Result.draw:
         return 'あいこ';
+    }
+  }
+
+  String resultText() {
+    switch (this) {
+      case Result.win:
+        return 'おめでとうございます\nゲームクリアです。';
+      case Result.lose:
+        return '残念。あなたの負けが確定しました。';
+      case Result.draw:
+        return 'もう一度じゃんけんしてください。';
     }
   }
 }
