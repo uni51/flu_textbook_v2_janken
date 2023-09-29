@@ -61,13 +61,12 @@ class _NextPageState extends State<NextPage> {
     if (result == Result.draw) {
       timer = Timer(
         const Duration(seconds: 1), //遅延時間＝2秒
-            () {
+        () {
           // コールバックを渡しておく。ここに遷移メソッドは書いておく
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-              const MyHomePage(title: 'じゃんけんゲーム'),
+              builder: (context) => const MyHomePage(title: 'じゃんけんゲーム'),
             ),
           );
         },
@@ -83,7 +82,7 @@ class _NextPageState extends State<NextPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('あっち向いてほいゲーム'),
+        title: const Text('あっち向いてほいゲーム'),
       ),
       body: Center(
         child: Column(
@@ -95,28 +94,28 @@ class _NextPageState extends State<NextPage> {
             ),
             Text(
               computerHand?.text ?? '?',
-              style: TextStyle(fontSize: 100),
+              style: const TextStyle(fontSize: 100),
             ),
             const SizedBox(
               height: 50,
             ),
             Text(
               result?.text ?? '?',
-              style: TextStyle(fontSize: 40),
+              style: const TextStyle(fontSize: 40),
             ),
             const SizedBox(
               height: 30,
             ),
             Text(
               result?.resultText() ?? '?',
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
             const SizedBox(
               height: 50,
             ),
             Text(
               myHand?.text ?? '?',
-              style: TextStyle(fontSize: 200),
+              style: const TextStyle(fontSize: 200),
             ),
           ],
         ),

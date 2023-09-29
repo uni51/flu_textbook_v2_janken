@@ -86,29 +86,32 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               computerHand?.text ?? '?',
-              style: TextStyle(fontSize: 100),
+              style: const TextStyle(fontSize: 100),
             ),
             const SizedBox(
               height: 80,
             ),
             Text(
               result?.text ?? '?',
-              style: TextStyle(fontSize: 30),
+              style: const TextStyle(fontSize: 30),
             ),
-            if (result == Result.win || result == Result.lose) ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NextPage(preResultText: result!.text)),
-                  );
-                },
-                child: const Text('あっち向いてほいゲームへ')),
+            if (result == Result.win || result == Result.lose)
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              NextPage(preResultText: result!.text)),
+                    );
+                  },
+                  child: const Text('あっち向いてほいゲームへ')),
             const SizedBox(
               height: 80,
             ),
             Text(
               myHand?.text ?? '?',
-              style: TextStyle(fontSize: 200),
+              style: const TextStyle(fontSize: 200),
             ),
           ],
         ),
