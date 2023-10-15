@@ -1,40 +1,30 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'next_page.dart';
+import 'dart:async';
 
-void main() {
-  runApp(const MyApp());
-}
+import 'package:janken/main.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class NextPage extends StatefulWidget {
+  final String preResultText;
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'じゃんけんゲーム',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'じゃんけんゲーム'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const NextPage({super.key, required this.preResultText});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<NextPage> createState() => _NextPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _NextPageState extends State<NextPage> {
+  Timer? timer;
   Hand? myHand;
   Hand? computerHand;
   Result? result;
+
+  late String preResult;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void chooseComputerText() {
     final random = Random();
@@ -47,22 +37,39 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void decideResult() {
+    // 受け取ったデータを状態を管理する変数に格納
+    final preResult = widget.preResultText;
+
     if (myHand == null || computerHand == null) {
       return;
     }
 
-    final Result result;
-
+    Result result;
     if (myHand == computerHand) {
-      result = Result.draw;
-    } else if (myHand == Hand.rock && computerHand == Hand.scissors) {
-      result = Result.win;
-    } else if (myHand == Hand.scissors && computerHand == Hand.paper) {
-      result = Result.win;
-    } else if (myHand == Hand.paper && computerHand == Hand.rock) {
-      result = Result.win;
+      if (preResult == '勝ち') {
+        result = Result.win;
+      } else if (preResult == '負け') {
+        result = Result.lose;
+      } else {
+        result = Result.draw;
+      }
     } else {
-      result = Result.lose;
+      result = Result.draw;
+    }
+
+    if (result == Result.draw) {
+      timer = Timer(
+        const Duration(seconds: 1), //遅延時間＝2秒
+        () {
+          // コールバックを渡しておく。ここに遷移メソッドは書いておく
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MyHomePage(title: 'じゃんけんゲーム'),
+            ),
+          );
+        },
+      );
     }
 
     setState(() {
@@ -74,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('あっち向いてほいゲーム'),
       ),
       body: Center(
         child: Column(
@@ -89,25 +96,21 @@ class _MyHomePageState extends State<MyHomePage> {
               style: const TextStyle(fontSize: 100),
             ),
             const SizedBox(
-              height: 80,
+              height: 50,
             ),
             Text(
               result?.text ?? '?',
-              style: const TextStyle(fontSize: 30),
+              style: const TextStyle(fontSize: 40),
             ),
-            if (result == Result.win || result == Result.lose)
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              NextPage(preResultText: result!.text)),
-                    );
-                  },
-                  child: const Text('あっち向いてほいゲームへ')),
             const SizedBox(
-              height: 80,
+              height: 30,
+            ),
+            Text(
+              result?.resultText() ?? '?',
+              style: const TextStyle(fontSize: 20),
+            ),
+            const SizedBox(
+              height: 50,
             ),
             Text(
               myHand?.text ?? '?',
@@ -120,46 +123,61 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            heroTag: 'rock',
+            heroTag: 'left',
             onPressed: () {
               setState(() {
-                myHand = Hand.rock;
+                myHand = Hand.left;
               });
               chooseComputerText();
             },
-            tooltip: 'rock',
+            tooltip: 'left',
             child: const Text(
-              '👊️',
+              '👈',
               style: TextStyle(fontSize: 30),
             ),
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            heroTag: 'scissors',
+            heroTag: 'up',
             onPressed: () {
               setState(() {
-                myHand = Hand.scissors;
+                myHand = Hand.up;
               });
               chooseComputerText();
             },
-            tooltip: 'scissors',
+            tooltip: 'up',
             child: const Text(
-              '✌️',
+              '👆️',
               style: TextStyle(fontSize: 30),
             ),
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            heroTag: 'paper',
+            heroTag: 'right',
             onPressed: () {
               setState(() {
-                myHand = Hand.paper;
+                myHand = Hand.right;
               });
               chooseComputerText();
             },
-            tooltip: 'paper',
+            tooltip: 'right',
             child: const Text(
-              '✋',
+              '👉',
+              style: TextStyle(fontSize: 30),
+            ),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'down',
+            onPressed: () {
+              setState(() {
+                myHand = Hand.down;
+              });
+              chooseComputerText();
+            },
+            tooltip: 'down',
+            child: const Text(
+              '👇',
               style: TextStyle(fontSize: 30),
             ),
           ),
@@ -170,18 +188,21 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 enum Hand {
-  rock,
-  scissors,
-  paper;
+  left,
+  up,
+  right,
+  down;
 
   String get text {
     switch (this) {
-      case Hand.rock:
-        return '👊️';
-      case Hand.scissors:
-        return '✌️';
-      case Hand.paper:
-        return '✋';
+      case Hand.left:
+        return '👈';
+      case Hand.up:
+        return '👆';
+      case Hand.right:
+        return '👉';
+      case Hand.down:
+        return '👇';
     }
   }
 }
@@ -202,14 +223,14 @@ enum Result {
     }
   }
 
-  String koreanText() {
+  String resultText() {
     switch (this) {
       case Result.win:
-        return '승리';
+        return 'おめでとうございます\nゲームクリアです。';
       case Result.lose:
-        return '패배';
+        return '残念。あなたの負けが確定しました。';
       case Result.draw:
-        return '무승부';
+        return 'もう一度じゃんけんしてください。';
     }
   }
 }
