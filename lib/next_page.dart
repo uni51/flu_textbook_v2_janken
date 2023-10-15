@@ -24,9 +24,6 @@ class _NextPageState extends State<NextPage> {
   @override
   void initState() {
     super.initState();
-
-    // 受け取ったデータを状態を管理する変数に格納
-    preResult = widget.preResultText;
   }
 
   void chooseComputerText() {
@@ -40,22 +37,24 @@ class _NextPageState extends State<NextPage> {
   }
 
   void decideResult() {
+    // 受け取ったデータを状態を管理する変数に格納
+    final preResult = widget.preResultText;
+
     if (myHand == null || computerHand == null) {
       return;
     }
 
     Result result;
-
-    result = Result.draw;
-    if (preResult == '勝ち') {
-      if (myHand == computerHand) {
+    if (myHand == computerHand) {
+      if (preResult == '勝ち') {
         result = Result.win;
-      }
-    }
-    if (preResult == '負け') {
-      if (myHand == computerHand) {
+      } else if (preResult == '負け') {
         result = Result.lose;
+      } else {
+        result = Result.draw;
       }
+    } else {
+      result = Result.draw;
     }
 
     if (result == Result.draw) {
